@@ -1,0 +1,100 @@
+apiVersion: iam.services.k8s.aws/v1alpha1
+kind: Role
+metadata:
+  name: ack-pipe-role 
+spec:
+  name: ack-pipe-role 
+  maxSessionDuration: 3600
+  policyRefs:
+  - from:
+      name: ack-pipe-role-policy-ddb-table
+  - from:
+      name: ack-pipe-role-policy-sqs-queue
+  - from:
+      name: ack-pipe-role-policy-sqs-dlq
+  assumeRolePolicyDocument: >
+    {
+      "Version":"2012-10-17",
+      "Statement": [{
+        "Effect":"Allow",
+        "Principal": {
+          "Service": [
+            "pipes.amazonaws.com"
+          ]
+        },
+        "Action": ["sts:AssumeRole"]
+      }]
+    }
+  description: pipe role create by ACK
+  tags:
+  - key: event 
+    value: serverless-office-hours
+---
+apiVersion: iam.services.k8s.aws/v1alpha1
+kind: Policy
+metadata:
+  name: ack-pipe-role-policy-ddb-table
+spec:
+  name: ack-pipe-role-policy-ddb-table
+  description: role policy create by ACK
+  policyDocument: >
+    {
+      "Version":"2012-10-17",
+      "Statement":[{
+        "Effect": "Allow",
+        "Action": [
+          "dynamodb:DescribeStream",
+          "dynamodb:GetRecords",
+          "dynamodb:GetShardIterator",
+          "dynamodb:ListStreams"
+        ],
+        "Resource": "arn:aws:dynamodb:us-west-2:771174509839:*"
+      }]
+    }
+  tags:
+  - key: event 
+    value: serverless-office-hours
+---
+apiVersion: iam.services.k8s.aws/v1alpha1
+kind: Policy
+metadata:
+  name: ack-pipe-role-policy-sqs-queue
+spec:
+  name: ack-pipe-role-policy-sqs-queue
+  description: role policy create by ACK
+  policyDocument: >
+    {
+      "Version":"2012-10-17",
+      "Statement":[{
+        "Effect": "Allow",
+        "Action": [
+          "sqs:SentMessage"
+        ],
+        "Resource": "arn:aws:sqs:us-west-2:771174509839:ack-queue"
+      }]
+    }
+  tags:
+  - key: event 
+    value: serverless-office-hours
+---
+apiVersion: iam.services.k8s.aws/v1alpha1
+kind: Policy
+metadata:
+  name: ack-pipe-role-policy-sqs-dlq
+spec:
+  name: ack-pipe-role-policy-sqs-dlq
+  description: role policy create by ACK
+  policyDocument: >
+    {
+      "Version":"2012-10-17",
+      "Statement":[{
+        "Effect": "Allow",
+        "Action": [
+          "sqs:SentMessage"
+        ],
+        "Resource": "arn:aws:sqs:us-west-2:771174509839:ack-dlq"
+      }]
+    }
+  tags:
+  - key: event 
+    value: serverless-office-hours

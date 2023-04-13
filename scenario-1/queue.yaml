@@ -1,0 +1,19 @@
+apiVersion: sqs.services.k8s.aws/v1alpha1
+kind: Queue
+metadata:
+  name: ack-queue
+spec:
+  queueName: ack-queue
+  delaySeconds: "0"
+  tags:
+    event: serverless-office-hours
+---
+apiVersion: sqs.services.k8s.aws/v1alpha1
+kind: Queue
+metadata:
+  name: ack-dlq
+spec:
+  queueName: ack-dlq
+  delaySeconds: "0"
+  tags:
+    event: serverless-office-hours

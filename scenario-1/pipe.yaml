@@ -1,0 +1,17 @@
+apiVersion: pipes.services.k8s.aws/v1alpha1
+kind: Pipe
+metadata:
+ name: ack-pipe
+spec:
+  name: ack-pipe
+  roleARN: arn:aws:iam::771174509839:role/ack-pipe-role
+  source: arn:aws:dynamodb:us-west-2:771174509839:table/ack-table/stream/2023-04-13T02:39:51.777
+  sourceParameters:
+    dynamoDBStreamParameters:
+      startingPosition: LATEST
+      batchSize: 10
+      maximumRecordAgeInSeconds: 500
+  target: arn:aws:sqs:us-west-2:771174509839:ack-queue
+  description: pipe create by ACK
+  tags:
+    event: serverless-office-hours
