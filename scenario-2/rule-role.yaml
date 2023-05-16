@@ -1,0 +1,50 @@
+apiVersion: iam.services.k8s.aws/v1alpha1
+kind: Role
+metadata:
+  name: ack-rule-role
+  namespace: team-b
+spec:
+  name: ack-rule-role 
+  maxSessionDuration: 3600
+  policyRefs:
+  - from:
+      name: ack-rule-bus-policy
+  assumeRolePolicyDocument: >
+    {
+      "Version":"2012-10-17",
+      "Statement": [{
+        "Effect":"Allow",
+        "Principal": {
+          "Service": [
+            "events.amazonaws.com"
+          ]
+        },
+        "Action": ["sts:AssumeRole"]
+      }]
+    }
+  description: pipe role create by ACK
+  tags:
+  - key: event 
+    value: serverless-office-hours
+---
+apiVersion: iam.services.k8s.aws/v1alpha1
+kind: Policy
+metadata:
+  name: ack-rule-bus-policy
+spec:
+  name: ack-rule-bus-policy
+  description: role policy create by ACK
+  policyDocument: >
+    {
+      "Version":"2012-10-17",
+      "Statement":[{
+        "Effect": "Allow",
+        "Action": [
+          "events:*"
+        ],
+        "Resource": "arn:aws:events:us-west-2:771174509839:event-bus/ack-bus"
+      }]
+    }
+  tags:
+  - key: event 
+    value: serverless-office-hours

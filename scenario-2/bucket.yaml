@@ -1,0 +1,8 @@
+apiVersion: s3.services.k8s.aws/v1alpha1
+kind: Bucket
+metadata:
+  name: ack-bucket-serverless-office-hours
+  namespace: team-a
+spec:
+  name: ack-bucket-serverless-office-hours
+  eventBridgeNotification: enabled

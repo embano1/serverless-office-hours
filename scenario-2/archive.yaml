@@ -1,0 +1,12 @@
+apiVersion: eventbridge.services.k8s.aws/v1alpha1
+kind: Archive
+metadata:
+  name: ack-archive
+  namespace: team-b
+spec:
+  name: ack-archive
+  description: "EventBridge Archive with a filter using event source reference to a bus"
+  eventSourceRef:
+    from:
+      name: ack-bus
+  retentionDays: 10
