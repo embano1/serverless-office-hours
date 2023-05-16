@@ -1,0 +1,17 @@
+apiVersion: eventbridge.services.k8s.aws/v1alpha1
+kind: Rule
+metadata:
+  name: ack-rule
+  namespace: team-b
+spec:
+  name: ack-rule
+  description: "ACK EventBridge Filter Rule to SQS using event bus reference"
+  eventBusName: default
+  eventPattern: |
+    {
+      "detail-type":["Object Created"]
+    }
+  targets:
+  - arn: arn:aws:events:us-west-2:771174509839:event-bus/ack-bus
+    id: random-unique-id
+    roleARN: arn:aws:iam::771174509839:role/ack-rule-role
